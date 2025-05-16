@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>How Encryption Tools Work</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #00ffcc;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #00ffaa;
+      text-shadow: 0 0 10px #00ffaa88;
+    }
+    .container {
+      display: flex;
+      gap: 40px;
+      margin-top: 20px;
+    }
+    .panel {
+      background: #0f0f1f;
+      border: 1px solid #00ffaa44;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #00ffaa44;
+      padding: 20px;
+      width: 450px;
+      height: 480px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-size: 14px;
+    }
+    .log-line {
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    .done {
+      text-align: center;
+      color: #99ff99;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>How Encryption Tools Work</h1>
+  <div class="container">
+    <div class="panel" id="terminalPanel">
+      <strong>Terminal-Based Encryption</strong>
+    </div>
+    <div class="panel" id="guiPanel">
+      <strong>GUI-Based Encryption</strong>
+    </div>
+  </div>
+  <div class="done" id="finalMessage" style="display: none;">
+    ✅ All tools have securely encrypted their data.
+  </div>
+
+  <script>
+    const terminalSteps = [
+      "$ gpg --encrypt -r alice message.txt",
+      "[>] Generating session key...",
+      "[✓] Message encrypted using recipient's public key.",
+      "",
+      "$ openssl enc -aes-256-cbc -in report.docx -out report.enc",
+      "[>] Encrypting using password-based key...",
+      "[✓] Encrypted: report.enc"
+    ];
+
+    const guiSteps = [
+      "VeraCrypt Interface:",
+      "[+] Dropped file: TopSecret.pdf",
+      "[>] Encrypting with AES-256 + SHA-512...",
+      "[✓] Secure container created successfully.",
+      "",
+      "BitLocker Status:",
+      "Encrypting Drive D:...",
+      "[↻] Progress: ████████░░░░ 75%",
+      "[✓] Full disk encryption active."
+    ];
+
+    function appendLines(panelId, steps, delay = 1500) {
+      const panel = document.getElementById(panelId);
+      steps.forEach((text, i) => {
+        setTimeout(() => {
+          const div = document.createElement('div');
+          div.className = 'log-line';
+          div.style.animationDelay = `${i * 0.3}s`;
+          div.textContent = text;
+          panel.appendChild(div);
+          panel.scrollTop = panel.scrollHeight;
+        }, i * delay);
+      });
+    }
+
+    function runSimulation() {
+      document.getElementById("terminalPanel").innerHTML = "<strong>Terminal-Based Encryption</strong>";
+      document.getElementById("guiPanel").innerHTML = "<strong>GUI-Based Encryption</strong>";
+      document.getElementById("finalMessage").style.display = "none";
+      appendLines("terminalPanel", terminalSteps, 1600);
+      appendLines("guiPanel", guiSteps, 1800);
+    }
+
+    runSimulation();
+
+    setInterval(runSimulation, (terminalSteps.length + 2) * 1600 + 4000);
+
+    setTimeout(() => {
+      document.getElementById("finalMessage").style.display = "block";
+    }, (terminalSteps.length + 2) * 1600);
+  </script>
+</body>
+</html>
