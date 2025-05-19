@@ -1,127 +1,93 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>How Encryption Tools Work</title>
+  <title>Encryption Simulation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      margin: 0;
-      background: #000;
-      color: #00ffcc;
-      font-family: 'Courier New', Courier, monospace;
+      background-color: #0b0f13;
+      color: #00ffe7;
+      font-family: monospace;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-    h1 {
-      color: #00ffaa;
-      text-shadow: 0 0 10px #00ffaa88;
-      text-align: center;
-    }
-    .container {
-      display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
-      max-width: 950px;
-      width: 100%;
-      margin-top: 20px;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    .panel {
-      background: #0f0f1f;
-      border: 1px solid #00ffaa44;
-      border-radius: 12px;
-      box-shadow: 0 0 20px #00ffaa44;
+    .terminal {
+      background-color: #10141a;
+      border: 2px solid #00ffe7;
+      box-shadow: 0 0 25px #00ffe7;
+      border-radius: 10px;
       padding: 20px;
-      width: 100%;
-      max-width: 440px;
-      height: 480px;
+      width: 90%;
+      max-width: 720px;
+      height: 500px;
       overflow-y: auto;
-      white-space: pre-wrap;
       font-size: 14px;
+      line-height: 1.6;
     }
-    .log-line {
+    .line {
       opacity: 0;
-      animation: fadeIn 1s forwards;
+      animation: fadeIn 0.5s ease forwards;
     }
     @keyframes fadeIn {
       to { opacity: 1; }
     }
-    .done {
-      text-align: center;
-      color: #99ff99;
-      font-weight: bold;
-      margin-top: 20px;
-    }
   </style>
 </head>
 <body>
-  <h1>How Encryption Tools Work</h1>
-  <div class="container">
-    <div class="panel" id="terminalPanel">
-      <strong>Terminal-Based Encryption</strong>
-    </div>
-    <div class="panel" id="guiPanel">
-      <strong>GUI-Based Encryption</strong>
-    </div>
-  </div>
-  <div class="done" id="finalMessage" style="display: none;">
-    ✅ All tools have securely encrypted their data.
-  </div>
+  <div class="terminal" id="terminal"></div>
 
   <script>
-    const terminalSteps = [
-      "$ gpg --encrypt -r alice message.txt",
-      "[>] Generating session key...",
-      "[✓] Message encrypted using recipient's public key.",
-      "",
-      "$ openssl enc -aes-256-cbc -in report.docx -out report.enc",
-      "[>] Encrypting using password-based key...",
-      "[✓] Encrypted: report.enc"
+    const lines = [
+      "Initializing encryption tool...",
+      "Reading input file: 'financial_report_2024.pdf'",
+      "Calculating SHA-512 hash for integrity check...",
+      "Hash calculated: 8d7f3ac6c2a71908b5e1f7e3a0a0ef3d9ef3c40a...",
+      "Generating random 256-bit session key...",
+      "Session key: bfae49eac172991e4f17c8c927c02b10a0e0d981d230c...",
+      "Encrypting session key using RSA-4096 public key...",
+      "Session key encrypted.",
+      "Encrypting file contents using AES-256-CBC...",
+      "Dividing file into 4KB blocks...",
+      "Encrypting block 1/150...",
+      "Encrypting block 2/150...",
+      "Encrypting block 3/150...",
+      "......",
+      "Encrypting block 150/150...",
+      "File encryption complete.",
+      "Appending encrypted session key and metadata...",
+      "Finalizing encrypted container: 'financial_report_2024.enc'",
+      "Encryption process complete. Output saved successfully."
     ];
 
-    const guiSteps = [
-      "VeraCrypt Interface:",
-      "[+] Dropped file: TopSecret.pdf",
-      "[>] Encrypting with AES-256 + SHA-512...",
-      "[✓] Secure container created successfully.",
-      "",
-      "BitLocker Status:",
-      "Encrypting Drive D:...",
-      "[↻] Progress: ████████░░░░ 75%",
-      "[✓] Full disk encryption active."
-    ];
-
-    function appendLines(panelId, steps, delay = 1500) {
-      const panel = document.getElementById(panelId);
-      steps.forEach((text, i) => {
-        setTimeout(() => {
-          const div = document.createElement('div');
-          div.className = 'log-line';
-          div.style.animationDelay = `${i * 0.3}s`;
-          div.textContent = text;
-          panel.appendChild(div);
-          panel.scrollTop = panel.scrollHeight;
-        }, i * delay);
-      });
-    }
+    const terminal = document.getElementById("terminal");
 
     function runSimulation() {
-      document.getElementById("terminalPanel").innerHTML = "<strong>Terminal-Based Encryption</strong>";
-      document.getElementById("guiPanel").innerHTML = "<strong>GUI-Based Encryption</strong>";
-      document.getElementById("finalMessage").style.display = "none";
-      appendLines("terminalPanel", terminalSteps, 1600);
-      appendLines("guiPanel", guiSteps, 1800);
+            lines.forEach((line, index) => {
+        setTimeout(() => {
+          const div = document.createElement("div");
+          div.className = "line";
+          div.style.animationDelay = `${index * 0.2}s`;
+          div.textContent = line;
+          terminal.appendChild(div);
+          terminal.scrollTop = terminal.scrollHeight;
+        }, index * 500);
+      });
+
+      // Restart after the last message + 5s buffer and clear then restart
+      const totalTime = lines.length * 500 + 5000;
+      
+    setTimeout(() => {
+      terminal.innerHTML = "";
+      runSimulation();
+    }, totalTime);
+    
     }
 
     runSimulation();
-
-    setInterval(runSimulation, (terminalSteps.length + 2) * 1600 + 4000);
-
-    setTimeout(() => {
-      document.getElementById("finalMessage").style.display = "block";
-    }, (terminalSteps.length + 2) * 1600);
   </script>
 </body>
 </html>
